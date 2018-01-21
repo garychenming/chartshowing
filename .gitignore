@@ -1,0 +1,7 @@
+resource-bundles/
+config/
+*.sublime-*
+*.log
+deploy/
+metadata/
+apex-scripts/
