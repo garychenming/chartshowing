@@ -1,0 +1,37 @@
+<apex:page docType="html-5.0" sidebar="false" cache="true" controller="ChartShowingAppController" extensions="ChartShowingRemoteActions">
+    <html>
+        <head>
+            head1
+            <script type="text/javascript">
+                function getData(argument) {
+                    // body...
+                    console.log("1123213");
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.ChartShowingRemoteActions.getData}',
+                        function(result, event) {
+                            if(event.status) {
+                                var resultObject = JSON.parse(escape2Html(result))
+                                console.log("---" + escape2Html(result));
+                                console.log("---You have already used: " + resultObject.CurrentUsedData);
+                            }
+                        }
+                    );
+                }
+
+                function escape2Html(str) {
+                    var arrEntities = {'lt': '<', 'gt': '>', 'nbsp': ' ', 'amp': '&', 'quot': '"'}
+                    if (str != null) {
+                        str = str.replace(/&#39;/ig, "'")
+                        return str.replace(/&(lt|gt|nbsp|amp|quot);/ig, function (all, t) { return arrEntities[t] })
+                    }
+                }
+
+            </script>
+        </head>
+        <body>
+            body
+            <button onclick="getData()">click me.</button>
+            <label id="show">abc</label>
+        </body>
+    </html>
+</apex:page>
