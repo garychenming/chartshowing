@@ -10,22 +10,20 @@
             <button onclick="drawChart()">Draw data chart</button>
             <label id="show">abc</label>
             <div>
-                <canvas id="chartShowing" width="320" height="180" style="border: 1px solid #d3d3d3">
+                <canvas id="chartShowing" width="960" height="540" style="border: 1px solid #d3d3d3">
                     Your browser does not support the HTML5 canvas tag.
                 </canvas>
             </div>
         </body>
         <script type="text/javascript">
                 function getData(argument) {
-                    // body...
-                    console.log("1123213");
                     Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.ChartShowingRemoteActions.getData}',
                         function(result, event) {
                             if(event.status) {
                                 var resultObject = JSON.parse(escape2Html(result))
                                 console.log("---" + escape2Html(result));
-                                console.log("---You have already used: " + resultObject.CurrentUsedData);
+                                console.log("---You have already used: " + resultObject.CurrentUsedData + 'GB.');
                             }
                         }
                     );
