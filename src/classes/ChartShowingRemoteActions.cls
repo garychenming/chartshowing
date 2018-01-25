@@ -1,30 +1,30 @@
 public with sharing class ChartShowingRemoteActions
 {
-    private static final String BASIC_KIVIVM_URL = 'https://api.64clouds.com';
-
     public ChartShowingRemoteActions(ChartShowingAppController controller) {}
 
     @RemoteAction
     public static String getData()
     {
-        String endpoint = BASIC_KIVIVM_URL + '/v1/getServiceInfo?veid=738304&api_key=' + ChartShowingSettings__c.getOrgDefaults().APIKey__c;
+        try
+        {
+            ChartShowingApi chartShowingApi = new ChartShowingApi();
+            ChartShowingApi.ChartShowing chartShowing = chartShowingApi.getInfoFromServer();
+            ChartShowingUtil.insertNewRecord(chartShowing.DataCounter, false);
 
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(endpoint);
-        request.setMethod('GET');
-        HttpResponse response = (new Http()).send(request);
-        String body = response.getBody();
-        Map<String, Object> keyToValue = (Map<String, Object>)JSON.deserializeUntyped(body);
-        Long currentUsedDataByBite = (Long)keyToValue.get('data_counter');
-        Decimal currentUsedDataByGB = currentUsedDataByBite / 1024.0 / 1024.0 / 1024.0;
-        String currentUsedData = String.valueOf(currentUsedDataByGB).left(4) + 'GB';
-        BasicInfo basicInfo = new BasicInfo(endpoint, body, currentUsedData);
-        return JSON.serialize(basicInfo);
+            Decimal currentUsedDataByGB = chartShowing.DataCounter / 1024.0 / 1024.0 / 1024.0;
+            currentUsedDataByGB = currentUsedDataByGB.setScale(2);
+            BasicInfo basicInfo = new BasicInfo(chartShowing.Email, chartShowing.OperatingSystem, currentUsedDataByGB);
+            return JSON.serialize(basicInfo);
+        }
+        catch(Exception ex)
+        {
+            return '"ok":false,error' + JSON.serialize(ex);
+        }
     }
 
     public class BasicInfo
     {
-        public BasicInfo(String url, String body, String currentUsedData)
+        public BasicInfo(String url, String body, Decimal currentUsedData)
         {
             this.Url = url;
             this.Body = body;
@@ -33,6 +33,6 @@ public with sharing class ChartShowingRemoteActions
 
         public String Url { get; set; }
         public String Body { get; set; }
-        public String CurrentUsedData { get; set; }
+        public Decimal CurrentUsedData { get; set; }
     }
 }

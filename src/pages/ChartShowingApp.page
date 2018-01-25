@@ -1,18 +1,29 @@
-<apex:page docType="html-5.0" sidebar="false" cache="true" controller="ChartShowingAppController" extensions="ChartShowingRemoteActions">
+<apex:page docType="html-5.0" sidebar="false" cache="true" controller="ChartShowingAppController" extensions="ChartShowingRemoteActions" title="String">
     <html>
         <head>
-            head1
-            <script type="text/javascript">
+            <meta charset="utf-8"/>
+            <title>Chart Showing App</title>
+        </head>
+        <body>
+            body
+            <button onclick="getData()">click me</button>
+            <button onclick="drawChart()">Draw data chart</button>
+            <label id="show">abc</label>
+            <div>
+                <canvas id="chartShowing" width="960" height="540" style="border: 1px solid #d3d3d3">
+                    Your browser does not support the HTML5 canvas tag.
+                </canvas>
+            </div>
+        </body>
+        <script type="text/javascript">
                 function getData(argument) {
-                    // body...
-                    console.log("1123213");
                     Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.ChartShowingRemoteActions.getData}',
                         function(result, event) {
                             if(event.status) {
                                 var resultObject = JSON.parse(escape2Html(result))
                                 console.log("---" + escape2Html(result));
-                                console.log("---You have already used: " + resultObject.CurrentUsedData);
+                                console.log("---You have already used: " + resultObject.CurrentUsedData + 'GB.');
                             }
                         }
                     );
@@ -26,12 +37,17 @@
                     }
                 }
 
+                function drawChart() {
+                    var canvas = document.getElementById("chartShowing");
+                    var ctx = canvas.getContext("2d");
+
+                    ctx.beginPath();
+                    ctx.lineWidth = 10;
+                    ctx.lineCap = "butt";
+                    ctx.moveTo(20, 20);
+                    ctx.lineTo(200, 20);
+                    ctx.stroke();
+                }
             </script>
-        </head>
-        <body>
-            body
-            <button onclick="getData()">click me.</button>
-            <label id="show">abc</label>
-        </body>
     </html>
 </apex:page>
