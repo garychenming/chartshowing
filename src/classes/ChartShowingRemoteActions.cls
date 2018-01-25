@@ -12,8 +12,8 @@ public with sharing class ChartShowingRemoteActions
             ChartShowingUtil.insertNewRecord(chartShowing.DataCounter, false);
 
             Decimal currentUsedDataByGB = chartShowing.DataCounter / 1024.0 / 1024.0 / 1024.0;
-            String currentUsedData = String.valueOf(currentUsedDataByGB).left(5) + 'GB';
-            BasicInfo basicInfo = new BasicInfo(chartShowing.Email, chartShowing.OperatingSystem, currentUsedData);
+            currentUsedDataByGB = currentUsedDataByGB.setScale(2);
+            BasicInfo basicInfo = new BasicInfo(chartShowing.Email, chartShowing.OperatingSystem, currentUsedDataByGB);
             return JSON.serialize(basicInfo);
         }
         catch(Exception ex)
@@ -24,7 +24,7 @@ public with sharing class ChartShowingRemoteActions
 
     public class BasicInfo
     {
-        public BasicInfo(String url, String body, String currentUsedData)
+        public BasicInfo(String url, String body, Decimal currentUsedData)
         {
             this.Url = url;
             this.Body = body;
@@ -33,6 +33,6 @@ public with sharing class ChartShowingRemoteActions
 
         public String Url { get; set; }
         public String Body { get; set; }
-        public String CurrentUsedData { get; set; }
+        public Decimal CurrentUsedData { get; set; }
     }
 }
