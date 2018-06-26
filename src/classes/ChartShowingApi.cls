@@ -39,7 +39,7 @@ public with sharing class ChartShowingApi
             this.Email = (String)keyToValue.get('email');
             this.DataCounter = (Long)keyToValue.get('data_counter');
             this.DataNextReset = (Long)keyToValue.get('data_next_reset');
-            //this.IPAddresses = (List<String>)keyToValue.get('ip_addresses');
+            this.IPAddresses = (List<String>)keyToValue.get('ip_addresses');
             this.RDNSAPIAvailable = (Boolean)keyToValue.get('rdns_api_available');
             this.Suspended = (Boolean)keyToValue.get('suspended');
             this.Error = (Integer)keyToValue.get('error');
